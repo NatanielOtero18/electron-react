@@ -1,0 +1,19 @@
+.headerContainer {
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  background-color: rgba(0, 0, 0, 0.644);
+  color: rgb(230, 230, 230);
+  color: #FFF;
+  text-decoration: none;
+}
+.headerContainer h2 {
+  margin-left: 1em;
+  font-size: 2em;
+}
+.headerContainer .btnGroup {
+  gap: 0.5em;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 1em;
+}/*# sourceMappingURL=Navbar.module.css.map */

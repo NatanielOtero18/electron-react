@@ -1,0 +1,68 @@
+.seachContainer{  
+    width: 800px;  
+    background-color: whitesmoke;
+    display: flex;
+    padding: 1em;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+.inputContainer{
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+}
+.btnDown{
+    margin-top: 1.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+
+.mainContainer{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 2fr);
+    gap: 1em;
+    margin-left: 1em;
+    padding: 1em;
+
+}
+
+.itemCard{
+    padding-top: 0.5em;  
+    padding-bottom: 0.5em; 
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(209, 220, 255);
+    font-size: 1.5em;
+    font-weight: 150;
+    .nameContainer{
+        text-align: center;
+        
+        padding: 0.2em;
+        font-size: 2em;
+        text-decoration: underline;
+    }
+    .dataContainer{
+        font-size: 0.6em;
+        padding: 0.5em;       
+    }
+    .priceContainer{
+        padding: 0.2em;
+        font-size: 2em ;
+        
+    }
+    .btnContainer{
+        padding-top: 0.5em;
+        display: flex;
+        justify-content: space-around;
+        gap: 0.5em;
+        
+    }
+}

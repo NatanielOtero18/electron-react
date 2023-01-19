@@ -1,0 +1,48 @@
+
+.mainContainer{
+    
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+    
+    
+}
+.ticketContainer{
+    border: 2px solid black;
+    padding: 3em;
+}
+.total{
+    text-align: right;
+    margin-top: 3em;
+    border: 2px solid black;    
+    padding: 2em; 
+    font-size: 1em;
+    font-weight: bold;
+}
+.page{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+   
+}
+.btn{
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.itemCard{
+    border-bottom: 3px solid black;
+    gap: 1em;
+    display:flex ;
+    justify-content: space-between;
+    align-items: center;
+    div{
+        margin-top: 1em;
+    }
+    
+}

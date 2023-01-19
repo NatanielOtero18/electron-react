@@ -1,0 +1,31 @@
+@use "../shared" as s;
+
+.headerContainer {
+    display: grid;
+    grid-template-columns: 4fr 2fr;  
+    background-color: rgba(0, 0, 0, 0.644);
+    color: s.$component-font-color;
+    color: #FFF;
+    text-decoration: none;
+    h2{
+        margin-left: 1em;
+        font-size: 2em;
+    }
+    .btnGroup{
+        gap: 0.5em;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-right: 1em;
+    }
+
+}
+
+  
+
+
+.link {
+   
+   
+}
+
