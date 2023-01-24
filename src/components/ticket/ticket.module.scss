@@ -15,6 +15,9 @@
     padding: 3em;
 }
 .total{
+    display: flex;
+    flex-direction: column;   
+    gap: 0.5em; 
     text-align: right;
     margin-top: 3em;
     border: 2px solid black;    

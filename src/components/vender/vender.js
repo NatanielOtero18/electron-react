@@ -34,27 +34,41 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 
 const Vender = (props) => {
     const [listaVenta, setListaVenta] = useState([]);
-    const [barcode, setBarcode] = useState("");   
+    const [barcode, setBarcode] = useState("");
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("");
-    
+
+    const [ventaCerrada, setVentaCerrada] = useState(false);
     const [total, setTotal] = useState(0);
+    const [vuelto, setVuelto] = useState("");
+    const [clienteInput, setClienteInput] = useState("");
     const [dialogOpen, setdialogOpen] = useState(false);
 
-    const openDialog = () =>{
-        setdialogOpen(true);        
+    const openDialog = () => {
+        setdialogOpen(true);
     }
 
-    const closeDialog = () =>{
+    const closeDialog = () => {
         setdialogOpen(false)
     }
 
+
     const getTotal = () => {
+        setTotal(0)
         let sub = 0
         listaVenta.forEach(element => {
             sub = sub + element.total;
         })
         setTotal(sub);
+        if (vuelto !== "") {
+            if (clienteInput < sub) {
+                setOpen(true);
+                setText("Error, el importe ingresado no alcanza a cubrir el total")
+                setVuelto("")
+            }
+            else { setVuelto(clienteInput - sub) }
+
+        }
     }
 
     useEffect(() => {
@@ -71,7 +85,7 @@ const Vender = (props) => {
             setBarcode(e.target.value);
         }
     }
-   
+
 
     const handleClose = () => {
         setOpen(false);
@@ -90,20 +104,20 @@ const Vender = (props) => {
                 prUnit: data[0].precio,
                 total: data[0].precio
             }
-            if(listaVenta.filter(value=>value.id===item.id).length > 0){
+            if (listaVenta.filter(value => value.id === item.id).length > 0) {
                 const newList = listaVenta.map(element => {
                     if (element.id === item.id) {
-                        return { ...element, cantidad: element.cantidad + 1, total: element.prUnit *  (element.cantidad + 1) }
+                        return { ...element, cantidad: parseInt(element.cantidad) + 1 , total: element.prUnit * ( parseInt(element.cantidad) + 1) }
                     }
                     return element;
                 })
                 setListaVenta(newList);
             }
-            else{
+            else {
                 setListaVenta(listaVenta => [...listaVenta, item]);
-            }            
+            }
             setBarcode("");
-            
+
         }
 
 
@@ -112,7 +126,7 @@ const Vender = (props) => {
     const updateItem = (e, id) => {
         const { value } = e.target;
 
-        if (value === "0" ) {
+        if (value === "0") {
             deleteFromList(id);
         } else {
             const newList = listaVenta.map(element => {
@@ -132,16 +146,53 @@ const Vender = (props) => {
     }
 
     const handleKeyPress = (event) => {
-        if(event.key === 'Enter'){
-          if(barcode !== ""){
-            searchProdbyCode() 
-          }
+        if (event.key === 'Enter') {
+            if (barcode !== "") {
+                searchProdbyCode()
+            }
         }
-      }
+    }
+    const enterVuelto = (event) => {
+        if (event.key === 'Enter') {
+            confrimVuelto()
+        }
+    }
+    const confrimVuelto = () => {
+        if (clienteInput >= total) {
+            setVuelto(clienteInput - total)
+            setVentaCerrada(true);
+        }
+        else {
+            setOpen(true);
+            setText("Error, el importe ingresado no alcanza a cubrir el total")
+        }
+
+    }
 
     const newSell = () => {
+
         setListaVenta([]);
-    }   
+        setVentaCerrada(false);
+        setClienteInput("");
+        setVuelto("");
+        setTotal(0);
+    }
+
+    const handleVuelto = (e) => {
+        if (e.target.value === "") {
+            setVuelto("")
+            setVentaCerrada(false);
+        }
+        if (isNaN(e.target.value)) {
+            setOpen(true);
+            setText("Error, ingresar un valor numerico")
+            setClienteInput("");
+        }
+        else {
+            setClienteInput(e.target.value);
+        }
+
+    }
 
 
 
@@ -158,8 +209,8 @@ const Vender = (props) => {
                             variant="outlined"
                             value={barcode}
                             onChange={(e) => { handleChange(e) }}
-                            onKeyDown={(e)=> handleKeyPress(e)}
-                        />                       
+                            onKeyDown={(e) => handleKeyPress(e)}
+                        />
 
                         <Button onClick={() => { searchProdbyCode() }} variant="contained" >
                             Agregar producto
@@ -173,12 +224,30 @@ const Vender = (props) => {
                     listaVenta.length > 0 ?
                         <div className={styles.totalContainer}>
                             Total: {total}
-                            <Button onClick={()=>openDialog()} color="success" variant="contained" >
-                                Generar Ticket
+
+                            <TextField fullWidth
+                                id="outlined-basic"
+                                label="El cliente paga con:"
+                                variant="outlined"
+                                value={clienteInput}
+                                onChange={(e) => { handleVuelto(e) }}
+                                onKeyDown={(e) => enterVuelto(e)}
+                            />
+                            <Button onClick={() => confrimVuelto()} variant="contained" >
+                                Calcular vuelto
                             </Button>
-                            <Button onClick={()=>newSell()} color="error" variant="contained" >
-                                Confirmar Venta
-                            </Button>
+                            Vuelto: {vuelto}
+
+                            {
+                                ventaCerrada ? <div className={styles.btnTicket}>
+                                    <Button onClick={() => openDialog()} color="success" variant="contained" >
+                                        Generar Ticket
+                                    </Button>
+                                    <Button onClick={() => newSell()} color="error" variant="contained" >
+                                        Nueva Venta
+                                    </Button>
+                                </div> : null
+                            }
                         </div> :
                         null
                 }
@@ -246,31 +315,53 @@ const Vender = (props) => {
                 </DialogActions>
             </Dialog>
             <Dialog
-                id="sell"
+                id="ticket"
                 fullScreen
                 open={dialogOpen}
                 onClose={closeDialog}
             >
                 <AppBar sx={{ position: 'relative', backgroundColor: "black" }}>
-                    <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center",fontSize:"2em" }}>
+                    <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "2em" }}>
 
-                        Confirmar Venta
+                        Ticket de venta
                         <CloseButton
                             edge="start"
                             color="inherit"
                             onClick={closeDialog}
                             aria-label="close"
-                            sx={{ color: "white"}}
+                            sx={{ color: "white" }}
                         >
                             <CloseIcon />
                         </CloseButton>
                     </Toolbar>
                 </AppBar>
-               <Ticket 
-               total = {total}
-               listaVenta={listaVenta}/>
-               
+                <Ticket
+                    total={total}
+                    vuelto={vuelto}
+                    clienteInput={clienteInput}
+                    listaVenta={listaVenta} />
+
             </Dialog>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {text}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} autoFocus>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+
         </div>
     );
 }

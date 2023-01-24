@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import PrintIcon from '@mui/icons-material/Print';
 
 const Ticket = (props) => {
-    const { listaVenta, total } = props;
+    const { listaVenta, total, clienteInput, vuelto } = props;
     const componentRef = useRef();
 
     return (
@@ -51,7 +51,15 @@ const Ticket = (props) => {
                         })
                     }
                     <div className={styles.total}>
+                        <div>
                         Total $ {total}
+                        </div>
+                        <div>
+                        Usted pago con $ {clienteInput}
+                        </div>
+                       <div>
+                       Su vuelto es de $ {vuelto}
+                       </div>
                     </div>
                 </div>
 

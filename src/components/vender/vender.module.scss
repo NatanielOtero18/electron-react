@@ -79,16 +79,25 @@
    
 }
 .totalContainer{
+    width: 600px;
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
     align-items: center;
     margin-bottom: 1em;
     background-color: rgb(209, 220, 255);
     font-size: 2em;
-    padding: 0.5em;
+    padding: 1em;
     gap: 1em;
-    border: 2px solid black;   
+    border: 2px solid black; 
+    
 }
+.btnTicket{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0.5em;
+}  
 
 @keyframes gradient {
     0% {
