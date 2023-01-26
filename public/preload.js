@@ -33,6 +33,14 @@ contextBridge.exposeInMainWorld('api', {
             console.log(error);
         }
     },
+    updateDesc: async (id,desc) => {
+        try {
+            const resp = await ipcRenderer.invoke("updateDesc",id,desc);            
+            return resp
+        } catch (error) {
+            console.log(error);
+        }
+    },
     addItem: async (id,producto,precio) => {
         
             const resp = await ipcRenderer.invoke("insert",id,producto,precio);            

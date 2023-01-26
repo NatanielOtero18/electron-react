@@ -27,12 +27,24 @@ const App = () => {
     setSearchActive(param);
 
   }
+  const handleDesc = async (id, desc) =>{
+    try {
+      setLoading(true);
+      let response = await window.api.updateDesc(id, desc).then(()=>{
+        updateList(id, null, desc)
+        setLoading(false);
+      });
+      console.log(response)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleUpdate = async (id, precio) => {
     try {
       setLoading(true);
       let response = await window.api.updatePrice(id, precio).then(() => {
-        updateList(id, precio)
+        updateList(id, precio, null)
         setLoading(false);
 
       });
@@ -41,19 +53,37 @@ const App = () => {
       console.log(error);
     }
   }
-  const updateList = (id, precio) => {
-    let newList = response.map(element =>{
-      if (element.id === id) {
-        return {...element, precio: precio}
-      }
-      return element;
-    })
-    let newFullList = fullList.map(element =>{
-      if (element.id === id) {
-        return {...element, precio: precio}
-      }
-      return element;
-    })
+  const updateList = (id, precio , desc) => {
+    let newList ;
+    let newFullList ;
+    if(desc === null)
+    {
+      newList = response.map(element =>{
+        if (element.id === id) {
+          return {...element, precio: precio}
+        }
+        return element;
+      })
+      newFullList = fullList.map(element =>{
+        if (element.id === id) {
+          return {...element, precio: precio}
+        }
+        return element;
+      })
+    }else{
+      newList = response.map(element =>{
+        if (element.id === id) {
+          return {...element, desc: desc}
+        }
+        return element;
+      })
+      newFullList = fullList.map(element =>{
+        if (element.id === id) {
+          return {...element, desc: desc}
+        }
+        return element;
+      })
+    } 
     setResponse(newList);
     setFullList(newFullList);
   }
@@ -133,6 +163,11 @@ const App = () => {
     setFullList(newFullList);
   }
 
+  const calculateDesc = (price, desc) => {
+    let finalPrice = price - (price * (desc / 100))
+    return finalPrice;
+}
+
   return (
     <div >
       {
@@ -145,10 +180,12 @@ const App = () => {
             />
             <MainView
               response={response}
+              calculateDesc={calculateDesc}
               searchActive={searchActive}
               handleKeyPress={handleKeyPress}
               handleSearch={handleSearch}
               handleUpdate={handleUpdate}
+              handleDesc={handleDesc}
               search={search}
               handleFullList={handleFullList}
               handleChange={handleChange}

@@ -13,6 +13,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
+import Toolbar from '@mui/material/Toolbar';
+import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
 import { styled } from '@mui/material/styles';
 
@@ -22,6 +24,7 @@ const ModButton = styled(Button)(({ theme }) => ({
     '&:hover': {
         backgroundColor: "rgb(102, 167, 221)",
     },
+    padding:"0.5em",
 }));
 
 const DelButton = styled(IconButton)(({ theme }) => ({
@@ -32,53 +35,72 @@ const DelButton = styled(IconButton)(({ theme }) => ({
     },
 }));
 
+const CloseButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.getContrastText("rgb(173, 34, 34)"),
+    backgroundColor: "rgb(173, 34, 34)",
+    '&:hover': {
+        backgroundColor: "rgb(253, 73, 73)",
+    },
+}));
+
 
 const MainView = (props) => {
 
-    const { response, searchActive } = props;      
+    const { response, searchActive } = props;
+    console.log(response)
     const [prodMod, setProdMod] = useState(0);
     const [prodDel, setProdDel] = useState(0);
+    const [prodModName, setProdModName] = useState("");
     const [precioMod, setPrecioMod] = useState(0);
+    const [descMod, setdescMod] = useState(0);
     const [open, setOpen] = useState(false);
     const [dialogOpen, setdialogOpen] = useState(false);
-    
-    const openDialog = () =>{
-        setdialogOpen(true);        
+
+    const openDialog = () => {
+        setdialogOpen(true);
     }
 
-    const closeDialog = () =>{
+    const closeDialog = () => {
         setdialogOpen(false)
     }
 
-    const handleOpen = (id,precio) => {
+    const handleOpen = (id, precio, desc,name) => {
+        setProdModName(name)
         setProdMod(id)
         setPrecioMod(precio)
+        setdescMod(desc)
         setOpen(true);
     };
 
-    const handleChangeMod = (e) =>{
+    const handleChangeMod = (e) => {
         setPrecioMod(e.target.value);
+    }
+
+    const handleDescMod = (e) => {
+        setdescMod(e.target.value);
     }
 
     const handleClose = () => {
         setOpen(false);
     };
-  
-   const handleDeleteConfirm = (id) =>{
-    openDialog()
-    setProdDel(id)    
-   };
+
+    const handleDeleteConfirm = (id) => {
+        openDialog()
+        setProdDel(id)
+    };
+
+
 
     return (
         <div>
-        {
-            searchActive ? <div className={styles.btnDown}>
-                <Button color="error" onClick={() => { props.handleFullList() }} variant="contained" startIcon={<ArrowBackIcon />}>
-                    Volver al listado
-                </Button>
-            </div> :
-                null
-        }
+            {
+                searchActive ? <div className={styles.btnDown}>
+                    <Button color="error" onClick={() => { props.handleFullList() }} variant="contained" startIcon={<ArrowBackIcon />}>
+                        Volver al listado
+                    </Button>
+                </div> :
+                    null
+            }
             <div className={styles.inputContainer}>
                 <Box
                     autoComplete="off"
@@ -90,7 +112,7 @@ const MainView = (props) => {
                             variant="outlined"
                             value={props.search}
                             onChange={(e) => { props.handleChange(e) }}
-                            onKeyDown={(e) => { props.handleKeyPress(e)} }
+                            onKeyDown={(e) => { props.handleKeyPress(e) }}
                         />
 
                         <Button onClick={() => { props.handleSearch() }} variant="contained" endIcon={<SearchIcon />}>
@@ -102,6 +124,7 @@ const MainView = (props) => {
             </div>
             <div className={styles.mainContainer}>
                 {
+
                     response.map((element) => {
                         return <div className={styles.itemCard} key={element.id}>
 
@@ -110,62 +133,107 @@ const MainView = (props) => {
                             </div>
                             <div className={styles.priceContainer}>
                                 $ {element.precio}
+
+                            </div>
+                            <div className={styles.saleContainer}>
+                                {
+                                    element.desc > 0 ? <div> Oferta: $ {props.calculateDesc(element.precio, element.desc)} </div> : null
+                                }
+                            </div>
+                            <div className={styles.descContainer}>
+                                Descuento:
+
+                                {element.desc}
+
+                                %
                             </div>
                             <div className={styles.dataContainer}>
-                               barcode: {element.id}
+                                barcode: {element.id}
                             </div>
 
                             <div className={styles.btnContainer}>
                                 <DelButton onClick={() => { handleDeleteConfirm(element.id) }} aria-label="delete">
                                     <DeleteIcon />
                                 </DelButton>
-                                <ModButton onClick={() => { handleOpen(element.id,element.precio) }} endIcon={<EditIcon />}>
-                                    Modificar
+                                <ModButton onClick={() => { handleOpen(element.id, element.precio , element.desc, element.producto) }} endIcon={<EditIcon />}>
+                                    Administrar
                                 </ModButton>
                             </div>
                         </div>
                     })
                 }
             </div>
-           
-            <Dialog id="form" open={open} onClose={handleClose}
-           >
-            <DialogTitle sx={{backgroundColor:"rgba(0, 0, 0, 0.644) ",color:"white",fontSize:"2em"}}>Modificar precio</DialogTitle>
-            <DialogContent  sx={{backgroundColor:"rgb(209, 220, 255) "}}>                   
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="Precio"
-                    type="number"
-                    fullWidth
-                    variant="standard"
-                    value={precioMod}
-                    onChange={(e)=>handleChangeMod(e)}                    
-                />
-            </DialogContent>
-            <DialogActions sx={{backgroundColor:"rgb(209, 220, 255) ",display:"flex",justifyContent:"space-around",alignItems:"center"}}>
-                <Button variant="contained" color="error" onClick={handleClose}>Cancelar</Button>
-                <Button variant="contained" color="success" onClick={()=>{props.handleUpdate(prodMod,precioMod); handleClose()}}>Confirmar</Button>
-            </DialogActions>
-        </Dialog>
-        <Dialog
+
+            <Dialog id="form" open={open} onClose={handleClose} xs={'md'} fullWidth="true"
+            
+            >
+            <Toolbar sx={{ color: "white", display: "flex", justifyContent: "space-between", alignItems: "center",fontSize:"1.5em" , backgroundColor: "rgb(34, 90, 173) "}}>
+
+            Administrar : {prodModName}
+            <CloseButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+                sx={{color: "white" }}
+            >
+                <CloseIcon />
+            </CloseButton>
+        </Toolbar>
+                <DialogContent sx={{ backgroundColor: "rgb(209, 220, 255) ", display:"flex",flexDirection:"column" }}>
+                    <div className={styles.modContainer}>
+                      <div className={styles.textinputContainer}>
+                      
+                      <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      label="Precio"
+                      type="number"                      
+                      variant="standard"
+                      fullWidth
+                      value={precioMod}                     
+                      onChange={(e) => handleChangeMod(e)}
+                  />
+                      </div>
+                        <Button variant="contained" color="error" onClick={() => { props.handleUpdate(prodMod, precioMod) }}>Cambiar precio</Button>
+                    </div>
+                    <div  className={styles.modContainer}>
+                       <div>
+                       <TextField
+                       autoFocus
+                       margin="dense"
+                       id="name"
+                       label="Descuento ( % )"
+                       type="number"
+                       fullWidth
+                       variant="standard"
+                       value={descMod}
+                       onChange={(e) => handleDescMod(e)}
+                   />
+                  
+                       </div>
+                        <Button variant="contained" color="error" onClick={() => { props.handleDesc(prodMod, descMod) }}>Aplicar descuento</Button>
+                    </div>
+                </DialogContent>                
+            </Dialog>
+            <Dialog
                 open={dialogOpen}
                 onClose={closeDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-           >
-                
+            >
+
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                       Esta seguro que desea eliminar este producto?
+                        Esta seguro que desea eliminar este producto?
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions sx={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-                    <Button variant="contained"  onClick={closeDialog} autoFocus>
+                <DialogActions sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Button variant="contained" onClick={closeDialog} autoFocus>
                         No
                     </Button>
-                    <Button variant="contained" color="error" onClick={()=>{props.handleDelete(prodDel);closeDialog()}} autoFocus>
+                    <Button variant="contained" color="error" onClick={() => { props.handleDelete(prodDel); closeDialog() }} autoFocus>
                         Si
                     </Button>
                 </DialogActions>

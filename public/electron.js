@@ -91,6 +91,19 @@ const createWindow = () => {
 
 
     })
+    ipcMain.handle("updateDesc", async (event,id, desc) => {
+        try {
+            const sql = `
+            UPDATE stock
+            SET desc = ? WHERE id = ?;       
+        `;
+            return await db.query(sql, [desc,id]);
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    })
     ipcMain.handle("insert", async (event,id, producto ,precio) => {
         try {
             const sql = `
