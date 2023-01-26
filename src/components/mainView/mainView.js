@@ -90,6 +90,7 @@ const MainView = (props) => {
                             variant="outlined"
                             value={props.search}
                             onChange={(e) => { props.handleChange(e) }}
+                            onKeyDown={(e) => { props.handleKeyPress(e)} }
                         />
 
                         <Button onClick={() => { props.handleSearch() }} variant="contained" endIcon={<SearchIcon />}>

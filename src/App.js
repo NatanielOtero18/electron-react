@@ -91,7 +91,11 @@ const App = () => {
     activeSearchSwtich(false);
     setSearch("")
   }
-
+  const handleKeyPress = (e) =>{
+    if (e.key === 'Enter') {
+      handleSearch(e)
+  }
+  }
   const handleSearch = (e) => {
     if (search === "") {
 
@@ -142,6 +146,7 @@ const App = () => {
             <MainView
               response={response}
               searchActive={searchActive}
+              handleKeyPress={handleKeyPress}
               handleSearch={handleSearch}
               handleUpdate={handleUpdate}
               search={search}
