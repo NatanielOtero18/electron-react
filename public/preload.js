@@ -9,6 +9,14 @@ contextBridge.exposeInMainWorld('api', {
             console.log(error)
         }
     },
+    getDesc: async () => {
+        try {
+            const resp = await ipcRenderer.invoke("getProductosDesc");
+            return resp;
+        } catch (error) {
+            console.log(error)
+        }
+    },
     selectId: async (code) => {
         try {
             const resp = await ipcRenderer.invoke("selectId",code);            

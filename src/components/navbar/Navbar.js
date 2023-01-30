@@ -124,7 +124,8 @@ const Navbar = (props) => {
                     </Toolbar>
                 </AppBar>
                 <Vender 
-                searchProdbyCode={props.searchProdbyCode}                
+                searchProdbyCode={props.searchProdbyCode}  
+                calculateDesc={props.calculateDesc}               
  />
             </Dialog>
 

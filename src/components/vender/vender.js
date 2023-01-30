@@ -101,13 +101,14 @@ const Vender = (props) => {
                 id: data[0].id,
                 nombre: data[0].producto,
                 cantidad: 1,
-                prUnit: data[0].precio,
-                total: data[0].precio
+                desc: data[0].desc ,
+                prUnit: props.calculateDesc(data[0].precio, data[0].desc),
+                total: props.calculateDesc(data[0].precio, data[0].desc),
             }
             if (listaVenta.filter(value => value.id === item.id).length > 0) {
                 const newList = listaVenta.map(element => {
                     if (element.id === item.id) {
-                        return { ...element, cantidad: parseInt(element.cantidad) + 1 , total: element.prUnit * ( parseInt(element.cantidad) + 1) }
+                        return { ...element, cantidad: parseInt(element.cantidad) + 1, total: element.prUnit * (parseInt(element.cantidad) + 1) }
                     }
                     return element;
                 })
@@ -266,9 +267,16 @@ const Vender = (props) => {
 
                                     {element.nombre}
                                 </div>
-                                <div className={styles.dataContainer}>
-                                    ${element.prUnit}
-                                </div>
+                                {
+                                    element.desc === 0 ?
+                                        <div className={styles.dataContainer}>
+                                            ${element.prUnit}
+                                        </div> 
+                                        : 
+                                        <div className={styles.descContainer}>
+                                            Oferta: ${element.prUnit}
+                                        </div>
+                                }
                                 <div>
                                     X
                                 </div>

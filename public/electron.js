@@ -54,7 +54,11 @@ const createWindow = () => {
         });
     };
     ipcMain.handle("getProductos", async (event) => {
-        const sql = `SELECT * FROM stock ; `;
+        const sql = `SELECT * FROM stock ORDER BY producto ASC; `;
+        return await db.query(sql, [])
+    })
+    ipcMain.handle("getProductosDesc", async (event) => {
+        const sql = `SELECT * FROM stock WHERE desc > 0; `;
         return await db.query(sql, [])
     })
     ipcMain.handle("selectId", async (event, args) => {

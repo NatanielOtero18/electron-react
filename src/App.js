@@ -88,11 +88,28 @@ const App = () => {
     setFullList(newFullList);
   }
   const setPath = async () => {
-    let data = await window.api.getAll();
-    console.log(data);
-    setFullList(data);
-    setResponse(data);
+    await window.api.getAll().then(data =>{
+      console.log(data);
+      setFullList(data);
+      setResponse(data);
+    });
+    
   }
+
+  const getDescList = async () => {
+    
+    setLoading(true);
+    await window.api.getDesc().then(data =>{
+      console.log(data);
+      setFullList(data);
+      setResponse(data);
+      setLoading(false);
+      setSearchActive(true);
+    });
+    
+    
+  }
+  
   
 
   const handleChange = (e) => {    
@@ -117,9 +134,15 @@ const App = () => {
 
   }
   const handleFullList = () => {
-    setPath();
-    activeSearchSwtich(false);
-    setSearch("")
+    setLoading(true)
+    setPath().then(
+      ()=>{
+        activeSearchSwtich(false);
+        setSearch("")
+        setLoading(false);
+      }
+    );
+    
   }
   const handleKeyPress = (e) =>{
     if (e.key === 'Enter') {
@@ -175,7 +198,8 @@ const App = () => {
           : <div>
             <Navbar
               setPath={setPath}
-              searchProdbyCode={searchProdbyCode}            
+              searchProdbyCode={searchProdbyCode}   
+              calculateDesc={calculateDesc}         
 
             />
             <MainView
@@ -190,6 +214,7 @@ const App = () => {
               handleFullList={handleFullList}
               handleChange={handleChange}
               handleDelete = {handleDelete}
+              getDescList = {getDescList}
             />
             <div className={styles.wave}></div>
             <div className={styles.wave}></div>

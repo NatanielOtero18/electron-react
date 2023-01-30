@@ -41,8 +41,7 @@
   
    .itemCard{
     background-color: rgb(209, 220, 255);
-    padding-top: 0.5em;  
-    padding-bottom: 0.5em; 
+    padding: 1em;
     border: 2px solid black;   
     display: flex;   
     gap: 1em;
@@ -53,17 +52,23 @@
     font-weight: 150;
     .nameContainer{
         text-align: center;
-        width: 60%;
+        width: 50%;
         padding: 0.2em;       
         text-decoration: underline;
     }    
     .priceContainer{
         padding: 0.5em;       
-        width: 15%;
+        width: 30%;
     }
     .dataContainer{
-        width: 10%;
-        padding: 0.2em; 
+        width: 20%;
+        padding: 0.5em; 
+        
+    }
+    .descContainer{
+        width: 20%;
+        padding: 0.5em;
+        color: red;
         
     }
     .btnContainer{

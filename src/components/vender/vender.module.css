@@ -44,8 +44,7 @@
 }
 .ventaContainer .itemCard {
   background-color: rgb(209, 220, 255);
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding: 1em;
   border: 2px solid black;
   display: flex;
   gap: 1em;
@@ -56,17 +55,22 @@
 }
 .ventaContainer .itemCard .nameContainer {
   text-align: center;
-  width: 60%;
+  width: 50%;
   padding: 0.2em;
   text-decoration: underline;
 }
 .ventaContainer .itemCard .priceContainer {
   padding: 0.5em;
-  width: 15%;
+  width: 30%;
 }
 .ventaContainer .itemCard .dataContainer {
-  width: 10%;
-  padding: 0.2em;
+  width: 20%;
+  padding: 0.5em;
+}
+.ventaContainer .itemCard .descContainer {
+  width: 20%;
+  padding: 0.5em;
+  color: red;
 }
 .ventaContainer .itemCard .btnContainer {
   padding-top: 0.5em;

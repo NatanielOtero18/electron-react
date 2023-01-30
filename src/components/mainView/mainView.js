@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import PercentIcon from '@mui/icons-material/Percent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Toolbar from '@mui/material/Toolbar';
 import CloseIcon from '@mui/icons-material/Close';
@@ -55,6 +55,8 @@ const MainView = (props) => {
     const [descMod, setdescMod] = useState(0);
     const [open, setOpen] = useState(false);
     const [dialogOpen, setdialogOpen] = useState(false);
+    const [alert, setAlert] = useState(false);
+    const [textAlert, settextAlert] = useState("");
 
     const openDialog = () => {
         setdialogOpen(true);
@@ -62,6 +64,9 @@ const MainView = (props) => {
 
     const closeDialog = () => {
         setdialogOpen(false)
+    }
+    const closeAlert = () => {
+        setAlert(false);
     }
 
     const handleOpen = (id, precio, desc,name) => {
@@ -77,6 +82,10 @@ const MainView = (props) => {
     }
 
     const handleDescMod = (e) => {
+        if(e.target.value > 100){
+            setAlert(true);
+            settextAlert("Error, no se puede agregar mas de un 100% de descuento");
+        }else
         setdescMod(e.target.value);
     }
 
@@ -115,8 +124,11 @@ const MainView = (props) => {
                             onKeyDown={(e) => { props.handleKeyPress(e) }}
                         />
 
-                        <Button onClick={() => { props.handleSearch() }} variant="contained" endIcon={<SearchIcon />}>
+                        <Button onClick={() => { props.handleSearch() }} sx={{paddingRight:"1em"}}   variant="contained" endIcon={<SearchIcon />}>
                             Buscar producto
+                        </Button>
+                        <Button onClick={() => { props.getDescList() }} sx={{paddingRight:"1em",paddingLeft:"1.5em"}}  color="secondary" variant="contained" endIcon={<PercentIcon sx={{padding:"0.2em"}}  />}>
+                            Ver descuentos
                         </Button>
                     </div>
 
@@ -164,7 +176,7 @@ const MainView = (props) => {
                 }
             </div>
 
-            <Dialog id="form" open={open} onClose={handleClose} xs={'md'} fullWidth="true"
+            <Dialog id="form" open={open} onClose={handleClose} xs={'md'} fullWidth={true}
             
             >
             <Toolbar sx={{ color: "white", display: "flex", justifyContent: "space-between", alignItems: "center",fontSize:"1.5em" , backgroundColor: "rgb(34, 90, 173) "}}>
@@ -208,7 +220,7 @@ const MainView = (props) => {
                        type="number"
                        fullWidth
                        variant="standard"
-                       value={descMod}
+                       value={descMod}                       
                        onChange={(e) => handleDescMod(e)}
                    />
                   
@@ -238,6 +250,24 @@ const MainView = (props) => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+            open={alert}
+            onClose={closeAlert}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    {textAlert}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={closeAlert} autoFocus>
+                    Aceptar
+                </Button>
+            </DialogActions>
+        </Dialog>
         </div>
     );
 
