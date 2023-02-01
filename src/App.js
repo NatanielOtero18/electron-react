@@ -7,14 +7,14 @@ import Navbar from "./components/navbar/Navbar";
 import MainView from './components/mainView/mainView';
 
 const App = () => {
-  
+
 
   const [response, setResponse] = useState({})
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("")
   const [fullList, setFullList] = useState({});
   const [searchActive, setSearchActive] = useState(false);
-  
+
 
   useEffect(() => {
     setPath().then(() => {
@@ -27,18 +27,28 @@ const App = () => {
     setSearchActive(param);
 
   }
-  const handleDesc = async (id, desc) =>{
+  const handleDesc = async (id, desc) => {
     try {
+      let descValid = desc;
       setLoading(true);
-      let response = await window.api.updateDesc(id, desc).then(()=>{
+      if (desc === null || desc === "" || desc === undefined) {        
+        descValid = 0;
+      }
+      console.log(descValid);
+     await window.api.updateDesc(id, descValid).then((data) => {
+      console.log(data)
         updateList(id, null, desc)
         setLoading(false);
       });
-      console.log(response)
-    } catch (error) {
+      
+
+    }
+    catch (error) {
       console.log(error);
     }
   }
+
+
 
   const handleUpdate = async (id, precio) => {
     try {
@@ -53,67 +63,66 @@ const App = () => {
       console.log(error);
     }
   }
-  const updateList = (id, precio , desc) => {
-    let newList ;
-    let newFullList ;
-    if(desc === null)
-    {
-      newList = response.map(element =>{
+  const updateList = (id, precio, desc) => {
+    let newList;
+    let newFullList;
+    if (desc === null) {
+      newList = response.map(element => {
         if (element.id === id) {
-          return {...element, precio: precio}
+          return { ...element, precio: precio }
         }
         return element;
       })
-      newFullList = fullList.map(element =>{
+      newFullList = fullList.map(element => {
         if (element.id === id) {
-          return {...element, precio: precio}
+          return { ...element, precio: precio }
         }
         return element;
       })
-    }else{
-      newList = response.map(element =>{
+    } else {
+      newList = response.map(element => {
         if (element.id === id) {
-          return {...element, desc: desc}
+          return { ...element, desc: desc }
         }
         return element;
       })
-      newFullList = fullList.map(element =>{
+      newFullList = fullList.map(element => {
         if (element.id === id) {
-          return {...element, desc: desc}
+          return { ...element, desc: desc }
         }
         return element;
       })
-    } 
+    }
     setResponse(newList);
     setFullList(newFullList);
   }
   const setPath = async () => {
-    await window.api.getAll().then(data =>{
+    await window.api.getAll().then(data => {
       console.log(data);
       setFullList(data);
       setResponse(data);
     });
-    
+
   }
 
   const getDescList = async () => {
-    
+
     setLoading(true);
-    await window.api.getDesc().then(data =>{
-      console.log(data);
+    await window.api.getDesc().then(data => {
+
       setFullList(data);
       setResponse(data);
       setLoading(false);
       setSearchActive(true);
     });
-    
-    
-  }
-  
-  
 
-  const handleChange = (e) => {    
-    if(e.target.value === ""){
+
+  }
+
+
+
+  const handleChange = (e) => {
+    if (e.target.value === "") {
       activeSearchSwtich(false)
       setResponse(fullList)
     }
@@ -136,18 +145,18 @@ const App = () => {
   const handleFullList = () => {
     setLoading(true)
     setPath().then(
-      ()=>{
+      () => {
         activeSearchSwtich(false);
         setSearch("")
         setLoading(false);
       }
     );
-    
+
   }
-  const handleKeyPress = (e) =>{
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch(e)
-  }
+    }
   }
   const handleSearch = (e) => {
     if (search === "") {
@@ -168,20 +177,20 @@ const App = () => {
 
   const searchProdbyCode = async (id) => {
     let data = await window.api.selectId(id);
-    console.log(data);
+
     setResponse(data);
   }
 
-    const handleDelete = async (id) =>{
-    await window.api.deteleProd(id).then(()=>{
+  const handleDelete = async (id) => {
+    await window.api.deteleProd(id).then(() => {
       deleteFromList(id);
     });
-    
+
   }
   const deleteFromList = (id) => {
-    let newList = response.filter(element => {return element.id !== id})
-    let newFullList = fullList.filter(element => {return element.id !== id});
-    console.log(newList);
+    let newList = response.filter(element => { return element.id !== id })
+    let newFullList = fullList.filter(element => { return element.id !== id });
+
     setResponse(newList);
     setFullList(newFullList);
   }
@@ -189,7 +198,7 @@ const App = () => {
   const calculateDesc = (price, desc) => {
     let finalPrice = price - (price * (desc / 100))
     return finalPrice;
-}
+  }
 
   return (
     <div >
@@ -198,8 +207,8 @@ const App = () => {
           : <div>
             <Navbar
               setPath={setPath}
-              searchProdbyCode={searchProdbyCode}   
-              calculateDesc={calculateDesc}         
+              searchProdbyCode={searchProdbyCode}
+              calculateDesc={calculateDesc}
 
             />
             <MainView
@@ -213,8 +222,8 @@ const App = () => {
               search={search}
               handleFullList={handleFullList}
               handleChange={handleChange}
-              handleDelete = {handleDelete}
-              getDescList = {getDescList}
+              handleDelete={handleDelete}
+              getDescList={getDescList}
             />
             <div className={styles.wave}></div>
             <div className={styles.wave}></div>

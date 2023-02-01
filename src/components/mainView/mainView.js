@@ -46,8 +46,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 
 const MainView = (props) => {
 
-    const { response, searchActive } = props;
-    console.log(response)
+    const { response, searchActive } = props;   
     const [prodMod, setProdMod] = useState(0);
     const [prodDel, setProdDel] = useState(0);
     const [prodModName, setProdModName] = useState("");
@@ -82,11 +81,22 @@ const MainView = (props) => {
     }
 
     const handleDescMod = (e) => {
-        if(e.target.value > 100){
-            setAlert(true);
-            settextAlert("Error, no se puede agregar mas de un 100% de descuento");
-        }else
-        setdescMod(e.target.value);
+        console.log(e.target.value)
+        if(e.target.value === " " || e.target.value === null || e.target.value === undefined)
+        {            
+            setdescMod(0);
+        }
+        if(!isNaN(e.target.value ))
+        {
+            if(e.target.value > 100){
+                setAlert(true);
+                settextAlert("Error, no se puede agregar mas de un 100% de descuento");
+            }else
+            setdescMod(e.target.value);
+        }
+        else{
+            setdescMod(0);
+        }
     }
 
     const handleClose = () => {
