@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CloseIcon from '@mui/icons-material/Close';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
@@ -14,6 +15,7 @@ import Toolbar from '@mui/material/Toolbar';
 import AddItem from "../addproducto/addproducto";
 import Vender from "../vender/vender";
 import { styled } from '@mui/material/styles';
+import LibroDiario from "../libroDiario/libroDiario";
 
 
 
@@ -48,12 +50,24 @@ const Navbar = (props) => {
     const [openAdd, setOpenAdd] = React.useState(false);
 
 
-    const handleOpenAdd= () => {
+    const handleOpenAdd = () => {
         setOpenAdd(true);
     };
 
     const handleCloseAdd = () => {
         setOpenAdd(false);
+    };
+
+    const [openHistory, setopenHistory] = React.useState(false);
+
+
+    const handleOpenHistory = () => {
+       
+        setopenHistory(true);
+    };
+
+    const handleCloseHistory = () => {
+        setopenHistory(false);
     };
 
     return (
@@ -64,6 +78,8 @@ const Navbar = (props) => {
                 </div>
                 <div className={styles.btnGroup}>
 
+                    
+
                     <Button onClick={() => handleOpenAdd()} color="success" sx={{ width: "200px", fontSize: "1.2em", padding: "0.5em" }} variant="contained" startIcon={<AddIcon />}>
                         Producto
                     </Button>
@@ -72,6 +88,9 @@ const Navbar = (props) => {
                         Venta
                     </Button>
 
+                    <Button onClick={() => handleOpenHistory()} color="secondary" sx={{ width: "200px", fontSize: "1.2em", padding: "0.5em" }} variant="contained" endIcon={<AssessmentIcon />}>
+                        Historial
+                    </Button>
 
                 </div>
 
@@ -86,7 +105,7 @@ const Navbar = (props) => {
                 onClose={handleCloseAdd}
             >
                 <AppBar sx={{ position: 'relative', backgroundColor: "black" }}>
-                    <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center",fontSize:"2em" }}>
+                    <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "2em" }}>
 
                         Agregar producto
                         <CloseButton
@@ -100,7 +119,7 @@ const Navbar = (props) => {
                         </CloseButton>
                     </Toolbar>
                 </AppBar>
-                <AddItem  setPath = {props.setPath}/>
+                <AddItem setPath={props.setPath} />
             </Dialog>
             <Dialog
                 id="sell"
@@ -109,7 +128,7 @@ const Navbar = (props) => {
                 onClose={handleCloseVenta}
             >
                 <AppBar sx={{ position: 'relative', backgroundColor: "black" }}>
-                    <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center",fontSize:"2em" }}>
+                    <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "2em" }}>
 
                         Venta
                         <CloseButton
@@ -123,10 +142,39 @@ const Navbar = (props) => {
                         </CloseButton>
                     </Toolbar>
                 </AppBar>
-                <Vender 
-                searchProdbyCode={props.searchProdbyCode}  
-                calculateDesc={props.calculateDesc}               
- />
+                <Vender
+                    searchProdbyCode={props.searchProdbyCode}
+                    calculateDesc={props.calculateDesc}
+                    listaVenta={props.listaVenta}
+                    setListaVenta ={props.setListaVenta}
+                    
+                />
+            </Dialog>
+            <Dialog
+                id="sell"
+                fullScreen
+                open={openHistory}
+                onClose={handleCloseHistory}
+            >
+                <AppBar sx={{ position: 'relative', backgroundColor: "black" }}>
+                    <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "2em" }}>
+
+                        Historial de ventas
+                        <CloseButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleCloseHistory}
+                            aria-label="close"
+                            sx={{ color: "white" }}
+                        >
+                            <CloseIcon />
+                        </CloseButton>
+                    </Toolbar>
+                </AppBar>
+                <LibroDiario
+                
+                searchProdbyCode={props.searchProdbyCode}
+                     />
             </Dialog>
 
         </div>

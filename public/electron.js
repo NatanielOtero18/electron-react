@@ -134,7 +134,88 @@ const createWindow = () => {
         }
 
 
+    })  
+   ipcMain.handle("newVenta", async (event, date, total) => {
+        try {
+            const sql = `
+            INSERT INTO ventas (date, total)
+            VALUES (?,?);
+           
+        `;
+            await db.query(sql, [date, total]);
+            const lastId = ' SELECT last_insert_rowid() AS lastID; '
+            return await db.query(lastId);
+        } catch (error) {
+            return error.message;
+        }
+
+
     })
+    ipcMain.handle("newVentaStock", async (event, id_venta , id_stock,cantidad,prUnit,total) => {
+        try {
+            const sql = db.prepare(`
+            INSERT INTO ventasStock (id_venta,id_stock,cantidad,prUnit,total)
+            VALUES (?,?,?,?,?);
+           ;       
+        `);
+         return sql.run(id_venta,id_stock,cantidad,prUnit,total);             
+        } catch (error) {
+            return error.message;
+        }
+
+
+    })
+    ipcMain.handle("getVentas", async (event) => {
+        const sql = `SELECT * FROM ventas ORDER BY date DESC; `;
+        return await db.query(sql, [])
+    })
+    ipcMain.handle("getVentasStock", async (event, id_venta) => {
+        const sql = `SELECT ventasStock.id, ventasStock.id_venta, ventasStock.cantidad, ventasStock.prUnit, ventasStock.total, stock.producto 
+         FROM ventasStock        
+         INNER JOIN stock ON ventasStock.id_stock = stock.id
+         WHERE ventasStock.id_venta = ? ; `;
+        return await db.query(sql, [id_venta])
+    })
+    ipcMain.handle("getDailyTotal", async (event , date) => {
+        try {
+            const sql = `
+            SELECT SUM(total) as daily
+            FROM ventas WHERE date = ?;       
+        `;
+            return await db.query(sql, [date]);
+        } catch (error) {
+            console.log(error)
+        }       
+    })
+    ipcMain.handle("getMonthlyTotal", async (event , month) => {
+        try {
+            console.log(month);
+            const sql = `
+            SELECT SUM(total) as monthly
+            FROM ventas WHERE date LIKE ?;       
+        `;
+            return await db.query(sql, [month]);
+        } catch (error) {
+            console.log(error)
+        }       
+    })
+    ipcMain.handle("getByMonth", async (event , month) => {
+        try {
+            console.log(month);
+            const sql = `
+            SELECT id_venta AS id, date AS Fecha, total as Total
+            FROM ventas
+            WHERE date LIKE ? ORDER BY date;
+                 
+        `;
+            return await db.query(sql, [month]);
+        } catch (error) {
+            console.log(error)
+        }       
+    })
+    
+   
+    
     
 
 

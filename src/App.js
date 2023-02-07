@@ -8,12 +8,13 @@ import MainView from './components/mainView/mainView';
 
 const App = () => {
 
-
+  const [listaVenta, setListaVenta] = useState([]);
   const [response, setResponse] = useState({})
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("")
   const [fullList, setFullList] = useState({});
   const [searchActive, setSearchActive] = useState(false);
+ 
 
 
   useEffect(() => {
@@ -47,7 +48,6 @@ const App = () => {
       console.log(error);
     }
   }
-
 
 
   const handleUpdate = async (id, precio) => {
@@ -209,6 +209,10 @@ const App = () => {
               setPath={setPath}
               searchProdbyCode={searchProdbyCode}
               calculateDesc={calculateDesc}
+              listaVenta={listaVenta}
+              setListaVenta={setListaVenta}
+              setLoading={setLoading}
+              
 
             />
             <MainView

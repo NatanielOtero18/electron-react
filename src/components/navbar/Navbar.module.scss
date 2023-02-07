@@ -1,6 +1,8 @@
 @use "../shared" as s;
 
 .headerContainer {
+    font-family: 'Montserrat';
+    src: local('Montserrat'), url(../../fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf) format('truetype');
     display: grid;
     grid-template-columns: 4fr 2fr;  
     background-color: rgba(0, 0, 0, 0.644);
@@ -10,6 +12,7 @@
     h2{
         margin-left: 1em;
         font-size: 2em;
+        letter-spacing: 2px;
     }
     .btnGroup{
         gap: 0.5em;

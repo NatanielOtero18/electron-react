@@ -33,7 +33,8 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const Vender = (props) => {
-    const [listaVenta, setListaVenta] = useState([]);
+    
+    const { listaVenta, setListaVenta } = props;
     const [barcode, setBarcode] = useState("");
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("");
@@ -171,7 +172,8 @@ const Vender = (props) => {
     }
 
     const newSell = () => {
-
+        
+        AddVenta();
         setListaVenta([]);
         setVentaCerrada(false);
         setClienteInput("");
@@ -195,7 +197,32 @@ const Vender = (props) => {
 
     }
 
+    const AddVenta = async () =>{
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; 
+        let dd = today.getDate();
+        
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+        
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+        console.log(formattedToday)
+        await window.api.addSale(formattedToday ,total).then(response =>{ 
+           
+           listaVenta.forEach(element => {            
+            
+            AddRel(response[0].lastID,element.id,element.cantidad,element.prUnit,element.total)
+           });
+          
 
+        })
+    }
+
+    const AddRel = async (id_venta,id_stock,cantidad,prUnit,total) =>{
+        await window.api.addRel(id_venta,id_stock,cantidad,prUnit,total);
+    }
+  
 
     return (
         <div className={styles.mainCointainer}>

@@ -1,0 +1,26 @@
+.tableContainer {
+
+
+    width: 90%;
+    padding: 1em;
+    margin-left: 5%;
+   
+
+    background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+
+
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gridTable {
+    padding: 1em;
+    display: flex;
+    gap: 0.5em;
+}
